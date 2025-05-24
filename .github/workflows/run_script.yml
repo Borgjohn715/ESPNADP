@@ -30,9 +30,12 @@ jobs:
           sudo apt-get install -y libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 
       - name: Install R packages
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
         run: |
           install.packages("remotes", repos = "https://cloud.r-project.org")
-          install.packages(c("dplyr", "tidyverse", "googlesheets4", "ffanalytics"), repos = "https://cloud.r-project.org")
+          install.packages(c("dplyr", "tidyverse", "googlesheets4"), repos = "https://cloud.r-project.org")
+          remotes::install_github("FantasyFootballAnalytics/ffanalytics")
         shell: Rscript {0}
 
       - name: Decode service account JSON
