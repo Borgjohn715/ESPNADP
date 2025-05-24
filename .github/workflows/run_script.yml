@@ -33,10 +33,11 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
         run: |
-          install.packages("remotes", repos = "https://cloud.r-project.org")
+          install.packages("devtools", repos = "https://cloud.r-project.org")
           install.packages(c("dplyr", "tidyverse", "googlesheets4"), repos = "https://cloud.r-project.org")
-          remotes::install_github("FantasyFootballAnalytics/ffanalytics")
+          devtools::install_github("FantasyFootballAnalytics/ffanalytics", upgrade = "never")
         shell: Rscript {0}
+
 
       - name: Decode service account JSON
         run: echo "$GCP_SHEET_CREDENTIALS" > service-account.json
