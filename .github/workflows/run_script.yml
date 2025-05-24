@@ -29,18 +29,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 
-      - name: Install R packages (CRAN)
-        run: |
-          install.packages(c("dplyr", "tidyverse", "googlesheets4", "devtools"), repos = "https://cloud.r-project.org")
-        shell: Rscript {0}
-
-      - name: Install ffanalytics from GitHub
+      - name: Install R packages (CRAN + GitHub)
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
         run: |
-          devtools::install_github("FantasyFootballAnalytics/ffanalytics", upgrade = "never")
+          install.packages(c("dplyr", "tidyverse", "googlesheets4", "remotes"), repos = "https://cloud.r-project.org")
+          remotes::install_github("FantasyFootballAnalytics/ffanalytics", upgrade = "never")
         shell: Rscript {0}
-
 
       - name: Decode service account JSON
         run: echo "$GCP_SHEET_CREDENTIALS" > service-account.json
