@@ -38,10 +38,15 @@ jobs:
             "httr", "httr2", "rvest", "curl"
           ), repos = "https://cloud.r-project.org")
 
+          cat(">>> Installing ffanalytics from GitHub...\n")
           remotes::install_github("Borgjohn715/ffanalytics", upgrade = "never", verbose = TRUE)
 
+          cat(">>> Checking if ffanalytics is installed and can load...\n")
           if (!requireNamespace("ffanalytics", quietly = TRUE)) {
-            stop("ffanalytics package failed to install.")
+            stop("ffanalytics package failed to install or load.")
+          } else {
+            library(ffanalytics)
+            cat(">>> ffanalytics loaded successfully!\n")
           }
         shell: Rscript {0}
 
