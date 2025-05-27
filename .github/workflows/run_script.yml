@@ -27,7 +27,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev
+          sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 
       - name: Install R packages (CRAN + your forked ffanalytics)
         env:
