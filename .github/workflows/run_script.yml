@@ -1,8 +1,8 @@
-name: Run R script weekly
+name: Run ESPN ADP Update
 
 on:
   schedule:
-    - cron: '0 12 * * 3'  # Every Wednesday at 8 AM EST (12:00 UTC)
+    - cron: "0 16 * * 4" # Thursday 12 PM Eastern during daylight savings
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
@@ -19,33 +19,19 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev
+          sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev
 
-      - name: Install and load R packages
-        env:
-          GITHUB_PAT: ${{ secrets.PAT }}
+      - name: Install R packages
         run: |
-          install.packages(c(
-            "dplyr", "tidyverse", "googlesheets4", "remotes",
-            "httr", "httr2", "rvest", "curl"
-          ), repos = "https://cloud.r-project.org")
-
-          cat(">>> Installing ffanalytics from GitHub...\n")
-          remotes::install_github("Borgjohn715/ffanalytics", upgrade = "never", verbose = TRUE)
-
-          cat(">>> Checking if all packages load properly...\n")
-          pkgs <- c("dplyr", "tidyverse", "googlesheets4", "ffanalytics")
-          for (pkg in pkgs) {
-            if (!requireNamespace(pkg, quietly = TRUE)) {
-              stop(paste(pkg, "failed to install"))
-            } else {
-              cat(">>>", pkg, "loaded successfully!\n")
-            }
-          }
+          install.packages(c("remotes", "googlesheets4", "dplyr", "tidyverse"))
+          remotes::install_github("FantasyFootballAnalytics/ffanalytics", upgrade = "never")
         shell: Rscript {0}
 
-      - name: Decode service account JSON
-        run: echo "$GCP_SHEET_CREDENTIALS" > service-account.json
+      - name: Create service account file
+        env:
+          GCP_SHEET_CREDENTIALS: ${{ secrets.GCP_SHEET_CREDENTIALS }}
+        run: |
+          echo "$GCP_SHEET_CREDENTIALS" > service-account.json
 
       - name: Run R script
         run: Rscript update_sheet.R
