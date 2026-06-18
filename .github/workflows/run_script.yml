@@ -24,7 +24,7 @@ jobs:
       - name: Install R packages
         run: |
           install.packages(c("remotes", "googlesheets4", "dplyr", "tidyverse"))
-          remotes::install_github("FantasyFootballAnalytics/ffanalytics", upgrade = "never", auth_token = NULL)
+          remotes::install_url("https://github.com/FantasyFootballAnalytics/ffanalytics/archive/refs/heads/master.zip", upgrade = "never")
         shell: Rscript {0}
 
       - name: Create service account file
