@@ -1,8 +1,6 @@
 name: Run ESPN ADP Update
 
 on:
-  schedule:
-    - cron: "17 16 * * 4" # Thursday 12 PM Eastern during daylight saving
   workflow_dispatch:
 
 jobs:
